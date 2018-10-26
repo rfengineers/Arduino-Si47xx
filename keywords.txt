@@ -17,6 +17,7 @@ Si4735_RX_Metrics	KEYWORD1
 #######################################
 begin	KEYWORD2
 end	KEYWORD2
+authenticate	KEYWORD2
 sendCommand	KEYWORD2
 getRevision	KEYWORD2
 setFrequency	KEYWORD2

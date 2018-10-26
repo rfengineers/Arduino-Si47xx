@@ -367,8 +367,9 @@ void Si4737Translate::decodeCallSign(word programIdentifier, char* callSign){
 }
 
 
-Si4737::Si4737(byte interface, byte pinPower, byte pinReset, byte pinGPO2,
+Si4737::Si4737(byte partNumberLastTwo, byte interface, byte pinPower, byte pinReset, byte pinGPO2,
 			   byte pinSEN){
+                                   _partNumberLastTwo = partNumberLastTwo;
 				   _mode = SI4735_MODE_FM;
 				   _pinPower = pinPower;
 				   _pinReset = pinReset;
@@ -398,7 +399,9 @@ void Si4737::end(bool hardoff){
 void Si4737::begin(byte mode, bool xosc, bool slowshifter){
 
 	//RIC - Removing all irrelevant SPI stuff
-	Serial.print("Si4737::begin() Init Si4737 at _i2caddr=0x");
+	Serial.print("Si47xx::begin() Init Si47");
+        Serial.print(_partNumberLastTwo);
+        Serial.print(" at _i2caddr=0x");
 	Serial.println(_i2caddr,HEX);
 /*
 	//Reset pinout config
@@ -424,17 +427,39 @@ void Si4737::begin(byte mode, bool xosc, bool slowshifter){
 	//Datasheet calls for 30ns from rising edge of RESET until GPO1/GPO2 bus
 	//mode selection completes, but Arduino can only go as low as 3us.
 */
-	Serial.println("Si4737::begin() Radio reset");
+	Serial.println("Si47xx::begin() Radio reset");
 	delayMicroseconds(5);
 
 
 	//Configure the I2C hardware
 	Wire.begin();
-	Serial.println("Si4737::begin() Wire has begun, I2C now active");
+	Serial.println("Si47xx::begin() Wire has begun, I2C now active");
 
 	setMode(mode, false, xosc); //not used yet
 
-	Serial.println("Si4737::begin() Done");
+	Serial.println("Si47xx::begin() Done");
+}
+
+void Si4737::authenticate()
+{
+  sendCommand(SI4735_CMD_GET_REV);
+  byte response[16];
+  getResponse(response);
+  if (response[1] == _partNumberLastTwo)
+  {
+    Serial.print("Si47xx::authenticate() GOOD: Part numbers match [Si47");
+    Serial.print(response[1]);
+    Serial.println("]");
+  }
+  else
+  {
+    Serial.print("Si47xx::authenticate() ERROR: Part number from GET_REV [Si47");
+    Serial.print(response[1]);
+    Serial.print("] does not match expected part number [Si47");
+    Serial.print(_partNumberLastTwo);
+    Serial.println("]");
+    while (true) { Serial.print("."); delay(1000); }
+  }
 }
 
 void Si4737::sendCommand(byte command, byte arg1, byte arg2, byte arg3,
@@ -674,7 +699,7 @@ void Si4737::setMode(byte mode, bool powerdown, bool xosc){
 	if(powerdown) end(false);
 	_mode = mode;
 
-	Serial.print("Si4737::setMode() Set mode to ");
+	Serial.print("Si47xx::setMode() Set mode to ");
 	Serial.println(mode);
 
 return;

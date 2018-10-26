@@ -501,7 +501,7 @@ public:
 	*               defaults for the SparkFun Si4735 Shield already
 	*               provided.
 	*/
-	Si4737(byte interface = SI4735_INTERFACE_I2C,
+	Si4737(byte partNumberLastTwo = 37, byte interface = SI4735_INTERFACE_I2C,
 		byte pinPower = SI4735_PIN_POWER,
 		byte pinReset = SI4735_PIN_RESET,
 		byte pinGPO2 = SI4735_PIN_GPO2, byte pinSEN = SI4735_PIN_SEN);
@@ -540,6 +540,9 @@ public:
 	*                 1MHz by setting this to false.
 	*/
 	void begin(byte mode, bool xosc = true, bool slowshifter = true);
+
+        // Check response of GET_REV command against indicated part number
+        void authenticate();
 
 	/*
 	* Description:
@@ -706,7 +709,7 @@ public:
 private:
 	byte _pinPower, _pinReset, _pinGPO2, _pinSDIO, _pinGPO1, _pinSCLK,
 		_pinSEN;
-	byte _mode, _response[16], _i2caddr;
+	byte _partNumberLastTwo, _mode, _response[16], _i2caddr;
 	bool _haverds;
 
 	/*
