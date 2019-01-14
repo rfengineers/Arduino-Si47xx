@@ -188,15 +188,15 @@ void Si4737RDSDecoder::makePrintable(char* str){
 
 #if defined(SI4735_DEBUG)
 void Si4735RDSDecoder::dumpRDSStats(void){
-	Serial.println("RDS group statistics:");
+	SerialUSB.println("RDS group statistics:");
 	for(byte i = 0; i < 32; i++) {
-		Serial.print("#");
-		Serial.print(i >> 1);
-		Serial.print((i & 0x01) ? 'B' : 'A');
-		Serial.print(": ");
-		Serial.println(_rdsstats[i]);
+		SerialUSB.print("#");
+		SerialUSB.print(i >> 1);
+		SerialUSB.print((i & 0x01) ? 'B' : 'A');
+		SerialUSB.print(": ");
+		SerialUSB.println(_rdsstats[i]);
 	}
-	Serial.flush();
+	SerialUSB.flush();
 }
 #endif
 
@@ -399,10 +399,6 @@ void Si4737::end(bool hardoff){
 void Si4737::begin(byte mode, bool xosc, bool slowshifter){
 
 	//RIC - Removing all irrelevant SPI stuff
-	Serial.print("Si47xx::begin() Init Si47");
-        Serial.print(_partNumberLastTwo);
-        Serial.print(" at _i2caddr=0x");
-	Serial.println(_i2caddr,HEX);
 /*
 	//Reset pinout config
 	pinMode(_pinReset, OUTPUT);
@@ -427,17 +423,13 @@ void Si4737::begin(byte mode, bool xosc, bool slowshifter){
 	//Datasheet calls for 30ns from rising edge of RESET until GPO1/GPO2 bus
 	//mode selection completes, but Arduino can only go as low as 3us.
 */
-	Serial.println("Si47xx::begin() Radio reset");
 	delayMicroseconds(5);
 
 
 	//Configure the I2C hardware
 	Wire.begin();
-	Serial.println("Si47xx::begin() Wire has begun, I2C now active");
 
 	setMode(mode, false, xosc); //not used yet
-
-	Serial.println("Si47xx::begin() Done");
 }
 
 void Si4737::authenticate()
@@ -447,57 +439,57 @@ void Si4737::authenticate()
   getResponse(response);
   if (response[1] == _partNumberLastTwo)
   {
-    Serial.print("Si47xx::authenticate() GOOD: Part numbers match [Si47");
-    Serial.print(response[1]);
-    Serial.println("]");
+    SerialUSB.print("Si47xx::authenticate() GOOD: Part numbers match [Si47");
+    SerialUSB.print(response[1]);
+    SerialUSB.println("]");
   }
   else
   {
-    Serial.print("Si47xx::authenticate() ERROR: Part number from GET_REV [Si47");
-    Serial.print(response[1]);
-    Serial.print("] does not match expected part number [Si47");
-    Serial.print(_partNumberLastTwo);
-    Serial.println("]");
-    while (true) { Serial.print("."); delay(1000); }
+    SerialUSB.print("Si47xx::authenticate() ERROR: Part number from GET_REV [Si47");
+    SerialUSB.print(response[1]);
+    SerialUSB.print("] does not match expected part number [Si47");
+    SerialUSB.print(_partNumberLastTwo);
+    SerialUSB.println("]");
+    while (true) { SerialUSB.print("."); delay(1000); }
   }
 }
 
 void Si4737::sendCommand(byte command, byte arg1, byte arg2, byte arg3,
 						 byte arg4, byte arg5, byte arg6, byte arg7){
 /*
-							 Serial.print("Si4735 CMD 0x");
-							 Serial.print(command, HEX);
-							 Serial.print(" (0x");
-							 Serial.print(arg1, HEX);
-							 Serial.print(" [");
-							 Serial.print(arg1, BIN);
-							 Serial.print("], 0x");
-							 Serial.print(arg2, HEX);
-							 Serial.print(" [");
-							 Serial.print(arg2, BIN);
-							 Serial.print("], 0x");
-							 Serial.print(arg3, HEX);
-							 Serial.print(" [");
-							 Serial.print(arg3, BIN);
-							 Serial.println("],");
-							 Serial.print("0x");
-							 Serial.print(arg4, HEX);
-							 Serial.print(" [");
-							 Serial.print(arg4, BIN);
-							 Serial.print("], 0x");
-							 Serial.print(arg5, HEX);
-							 Serial.print(" [");
-							 Serial.print(arg5, BIN);
-							 Serial.print("], 0x");
-							 Serial.print(arg6, HEX);
-							 Serial.print(" [");
-							 Serial.print(arg6, BIN);
-							 Serial.print("], 0x");
-							 Serial.print(arg7, HEX);
-							 Serial.print(" [");
-							 Serial.print(arg7, BIN);
-							 Serial.println("])");
-							 Serial.flush();
+							 SerialUSB.print("Si4735 CMD 0x");
+							 SerialUSB.print(command, HEX);
+							 SerialUSB.print(" (0x");
+							 SerialUSB.print(arg1, HEX);
+							 SerialUSB.print(" [");
+							 SerialUSB.print(arg1, BIN);
+							 SerialUSB.print("], 0x");
+							 SerialUSB.print(arg2, HEX);
+							 SerialUSB.print(" [");
+							 SerialUSB.print(arg2, BIN);
+							 SerialUSB.print("], 0x");
+							 SerialUSB.print(arg3, HEX);
+							 SerialUSB.print(" [");
+							 SerialUSB.print(arg3, BIN);
+							 SerialUSB.println("],");
+							 SerialUSB.print("0x");
+							 SerialUSB.print(arg4, HEX);
+							 SerialUSB.print(" [");
+							 SerialUSB.print(arg4, BIN);
+							 SerialUSB.print("], 0x");
+							 SerialUSB.print(arg5, HEX);
+							 SerialUSB.print(" [");
+							 SerialUSB.print(arg5, BIN);
+							 SerialUSB.print("], 0x");
+							 SerialUSB.print(arg6, HEX);
+							 SerialUSB.print(" [");
+							 SerialUSB.print(arg6, BIN);
+							 SerialUSB.print("], 0x");
+							 SerialUSB.print(arg7, HEX);
+							 SerialUSB.print(" [");
+							 SerialUSB.print(arg7, BIN);
+							 SerialUSB.println("])");
+							 SerialUSB.flush();
 */
 
 							 Wire.beginTransmission(_i2caddr);
@@ -586,21 +578,21 @@ void Si4737::getResponse(byte* response){
 	}
 
 /*
-	Serial.print("Si4735 RSP");
+	SerialUSB.print("Si4735 RSP");
 	for(int i = 0; i < 4; i++) {
-		if(i) Serial.print("           ");
-		else Serial.print(" ");
+		if(i) SerialUSB.print("           ");
+		else SerialUSB.print(" ");
 		for(int j = 0; j < 4; j++) {
-			Serial.print("0x");
-			Serial.print(response[i * 4 + j], HEX);
-			Serial.print(" [");
-			Serial.print(response[i * 4 + j], BIN);
-			Serial.print("]");
-			if(j != 3) Serial.print(", ");
+			SerialUSB.print("0x");
+			SerialUSB.print(response[i * 4 + j], HEX);
+			SerialUSB.print(" [");
+			SerialUSB.print(response[i * 4 + j], BIN);
+			SerialUSB.print("]");
+			if(j != 3) SerialUSB.print(", ");
 			else
-				if(i != 3) Serial.print(",");
+				if(i != 3) SerialUSB.print(",");
 		}
-		Serial.println("");
+		SerialUSB.println("");
 	}
 */
 }
@@ -614,23 +606,23 @@ byte Si4737::getStatus(void){
 	while(!Wire.available()) delayMicroseconds(100);
 	response = Wire.read();
 
-//	Serial.print(" gs");
-//	Serial.print(response);
+//	SerialUSB.print(" gs");
+//	SerialUSB.print(response);
 /*
 	if(response > 0){
-		Serial.print(F("\nSi4735 STS 0x"));
-		Serial.print(response, HEX);
-		//Serial.print(" [");
-		//Serial.print(response, BIN);
-		//Serial.println("]");
+		SerialUSB.print(F("\nSi4735 STS 0x"));
+		SerialUSB.print(response, HEX);
+		//SerialUSB.print(" [");
+		//SerialUSB.print(response, BIN);
+		//SerialUSB.println("]");
 		//Trimming end of status byte
-		if((response / 128) & 1) Serial.print(" CTS");
-		if((response / 64) & 1) Serial.print(" ERR");
-		if((response / 8) & 1) Serial.print(" RSQ");
-		if((response / 4) & 1) Serial.print(" RDS");
-		if((response / 2) & 1) Serial.print(" ASQ");
-		if(response & 1) Serial.print(" STC");
-		Serial.print("\n\n");
+		if((response / 128) & 1) SerialUSB.print(" CTS");
+		if((response / 64) & 1) SerialUSB.print(" ERR");
+		if((response / 8) & 1) SerialUSB.print(" RSQ");
+		if((response / 4) & 1) SerialUSB.print(" RDS");
+		if((response / 2) & 1) SerialUSB.print(" ASQ");
+		if(response & 1) SerialUSB.print(" STC");
+		SerialUSB.print("\n\n");
 	}
 */
 
@@ -695,12 +687,24 @@ void Si4737::setFrequency(long frequency){
 	completeTune();
 }
 
+char Si4737::getMode()
+{
+  switch (_mode)
+  {
+    case SI4735_MODE_FM:
+      return 'F';
+    case SI4735_MODE_AM:
+      return 'A';
+    case SI4735_MODE_WB:
+      return 'W';
+    default:
+      return 'U';
+  }
+}
+
 void Si4737::setMode(byte mode, bool powerdown, bool xosc){
 	if(powerdown) end(false);
 	_mode = mode;
-
-	Serial.print("Si47xx::setMode() Set mode to ");
-	Serial.println(mode);
 
 return;
 

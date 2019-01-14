@@ -593,6 +593,8 @@ public:
 	void setMode(byte mode, bool powerdown = true,
 		bool xosc = true);
 
+        char getMode();
+
 	/*
 	* Description:
 	*   Sets deemphasis time constant (see SI4735_FLG_DEEMPH_*).
@@ -604,12 +606,6 @@ public:
 	*   Sets stereo/mono
 	*/
 	void setAudioModeStereo(bool isStereo);
-
-	/*
-	* Description:
-	*   Gets the current mode of the radio (see SI4735_MODE_*).
-	*/
-	byte getMode(void) { return _mode; };
 
 	/*
 	* Description:
