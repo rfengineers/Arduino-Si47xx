@@ -369,7 +369,7 @@ typedef struct {
 	bool TP, TA, MS;
 	byte PTY, DICC;
 	char programService[9];
-	char programTypeName[9];
+	char programTypeName[51];
 	char radioText[65];
 } Si4737_RDS_Data;
 

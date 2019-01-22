@@ -125,7 +125,7 @@ void Si4737RDSDecoder::decodeRDSBlock(word block[]){
 	case SI4735_GROUP_10A:
 		if((block[1] & SI4735_RDS_PTYNAB) != _rdsptynab) {
 			_rdsptynab = !_rdsptynab;
-			memset(_status.programTypeName, ' ', 8);
+			memset(_status.programTypeName, ' ', 50);
 		}
 		fourchars[0] = switchEndian(block[2]);
 		fourchars[1] = switchEndian(block[3]);
@@ -163,8 +163,8 @@ bool Si4737RDSDecoder::getRDSTime(Si4737_RDS_Time* rdstime){
 void Si4737RDSDecoder::resetRDS(void){
 	memset(_status.programService, ' ', 8);
 	_status.programService[8] = '\0';
-	memset(_status.programTypeName, ' ', 8);
-	_status.programTypeName[8] = '\0';
+	memset(_status.programTypeName, ' ', 50);
+	_status.programTypeName[50] = '\0';
 	memset(_status.radioText, ' ', 64);
 	_status.radioText[64] = '\0';
 	_status.DICC = 0;
