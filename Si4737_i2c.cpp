@@ -437,13 +437,7 @@ void Si4737::authenticate()
   sendCommand(SI4735_CMD_GET_REV);
   byte response[16];
   getResponse(response);
-  if (response[1] == _partNumberLastTwo)
-  {
-    SerialUSB.print("Si47xx::authenticate() GOOD: Part numbers match [Si47");
-    SerialUSB.print(response[1]);
-    SerialUSB.println("]");
-  }
-  else
+  if (response[1] != _partNumberLastTwo)
   {
     SerialUSB.print("Si47xx::authenticate() ERROR: Part number from GET_REV [Si47");
     SerialUSB.print(response[1]);
