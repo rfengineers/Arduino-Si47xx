@@ -49,10 +49,6 @@ void Si4737RDSDecoder::decodeRDSBlock(word block[]){
 	case SI4735_GROUP_2B:
 		byte RTA, RTAW;
 
-		if((block[1] & SI4735_RDS_TEXTAB) != _rdstextab) {
-			_rdstextab = !_rdstextab;
-			memset(_status.radioText, ' ', 64);
-		}
 		RTA = lowByte(block[1] & SI4735_RDS_TEXT_ADDRESS);
 		RTAW = (grouptype == SI4735_GROUP_2A) ? 4 : 2;
 		fourchars[0] = switchEndian(
@@ -168,7 +164,6 @@ void Si4737RDSDecoder::resetRDS(void){
 	memset(_status.radioText, ' ', 64);
 	_status.radioText[64] = '\0';
 	_status.DICC = 0;
-	_rdstextab = false;
 	_rdsptynab = false;
 	_havect = false;
 #if defined(SI4735_DEBUG)
