@@ -819,11 +819,11 @@ void Si4737::setDeemphasis(byte deemph){
 void Si4737::setAudioModeStereo(bool isStereo){
     switch(_mode){
         case SI4735_MODE_FM:
-            setProperty( SI4735_PROP_FM_BLEND_STEREO_THRESHOLD, word(0x00, (isStereo ? SI4735_DEFAULT_FM_BLEND_STEREO_THRESHOLD : 127)));
-            setProperty( SI4735_PROP_FM_BLEND_MONO_THRESHOLD, word(0x00, (isStereo ? SI4735_DEFAULT_FM_BLEND_MONO_THRESHOLD : 127)));
+            setProperty( SI4735_PROP_FM_BLEND_STEREO_THRESHOLD, word(0x00, (isStereo ? 0 : 127)));
+            setProperty( SI4735_PROP_FM_BLEND_MONO_THRESHOLD, word(0x00, (isStereo ? 0 : 127)));
 
-            setProperty( SI4735_PROP_FM_BLEND_RSSI_STEREO_THRESHOLD, word(0x00, (isStereo ? SI4735_DEFAULT_FM_BLEND_RSSI_STEREO_THRESHOLD : 127)));
-            setProperty( SI4735_PROP_FM_BLEND_RSSI_MONO_THRESHOLD, word(0x00, (isStereo ? SI4735_DEFAULT_FM_BLEND_RSSI_MONO_THRESHOLD : 127)));
+            setProperty( SI4735_PROP_FM_BLEND_RSSI_STEREO_THRESHOLD, word(0x00, (isStereo ? 0 : 127)));
+            setProperty( SI4735_PROP_FM_BLEND_RSSI_MONO_THRESHOLD, word(0x00, (isStereo ? 0 : 127)));
 
             // Per AN332.pdf
             setProperty( SI4735_PROP_FM_BLEND_SNR_STEREO_THRESHOLD, word(0x00, 0));
