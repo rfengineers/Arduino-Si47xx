@@ -803,6 +803,12 @@ void Si4737::completeTune(void) {
 	if(_mode == SI4735_MODE_FM) enableRDS();
 }
 
+void Si4737::setAmChannelFilter(byte bandwidthSetting, bool powerLineNoiseRejectionEnabled)
+{
+    uint16_t mask = (bandwidthSetting | (powerLineNoiseRejectionEnabled ? 256 : 0));
+    setProperty(SI4735_PROP_AM_CHANNEL_FILTER, mask);
+}
+
 void Si4737::setDeemphasis(byte deemph){
     switch(_mode){
         case SI4735_MODE_FM:

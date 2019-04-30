@@ -617,6 +617,9 @@ public:
 	*/
 	void unMute(bool minvol = false);
 
+        // Sets AM channel filter parameters.
+        void setAmChannelFilter(byte bandwidthSetting, bool powerLineNoiseRejectionEnabled);
+
 	/*
 	* Description:
 	*   If in FM mode and the chip has received any RDS block, fetch it
